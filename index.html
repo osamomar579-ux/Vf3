@@ -201,7 +201,7 @@ function buildInput(img){const dur=Math.min(+$('dur').value,mMax),neg=$('negp').
 
 async function callProxy(path,method='GET',body=null){
   const key=$('apiKey').value.trim();
-  const r=await fetch('/api/proxy',{method,headers:{'Content-Type':'application/json','x-replicate-key':key,'x-replicate-path':path},...(body?{body:JSON.stringify(body)}:{})});
+  const r=await fetch('https://vf3.vercel.app/api/proxy',{method,headers:{'Content-Type':'application/json','x-replicate-key':key,'x-replicate-path':path},...(body?{body:JSON.stringify(body)}:{})});
   const d=await r.json();
   if(!r.ok)throw new Error(d.error||d.detail||'HTTP '+r.status);
   return d;
