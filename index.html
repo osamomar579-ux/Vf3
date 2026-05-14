@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VideoForge AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04040a;--s1:#0c0c18;--bd:#1c1c30;--ac:#6c63ff;--tl:#43e8d8;--tx:#e2e2f2;--mt:#55557a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--tx);font-family:'Cairo',sans-serif;min-height:100vh;background-image:radial-gradient(ellipse 55% 40% at 15% 10%,rgba(108,99,255,.13) 0%,transparent 60%),radial-gradient(ellipse 45% 35% at 85% 90%,rgba(67,232,216,.09) 0%,transparent 55%)}
+.wrap{max-width:780px;margin:0 auto;padding:0 14px 80px}
+.hdr{text-align:center;padding:32px 0 22px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:100px;padding:6px 20px;font-size:11px;color:var(--ac);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--tl);animation:pulse 2s infinite}
+h1{font-size:clamp(22px,5vw,38px);font-weight:900;line-height:1.1;margin-bottom:8px;background:linear-gradient(135deg,#fff 25%,var(--ac) 65%,var(--tl));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sub{color:var(--mt);font-size:13px}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-bottom:14px;position:relative;overflow:hidden}
+.card.hl::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--ac),var(--tl))}
+.slbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tl);margin-bottom:12px}
+label{display:block;font-size:12px;color:var(--mt);margin-bottom:7px}
+input[type=text],input[type=password],textarea{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;color:var(--tx);font-family:'Cairo',sans-serif;font-size:13px;padding:11px 13px;outline:none;direction:rtl;transition:border .2s}
+input:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(108,99,255,.14)}
+textarea{min-height:90px;resize:vertical;line-height:1.7}
+.models{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mcard{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:13px 8px;text-align:center;cursor:pointer;transition:all .2s}
+.mcard.sel{border-color:var(--ac);background:rgba(108,99,255,.1)}
+.mcard .ico{font-size:22px;margin-bottom:5px}
+.mcard .nm{font-size:11px;font-weight:700}
+.mcard .bdg{display:inline-block;margin-top:5px;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:700}
+.ratios{display:flex;gap:7px;flex-wrap:wrap}
+.rbtn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:9px 11px;border-radius:9px;min-width:60px;border:1px solid var(--bd);background:var(--bg);color:var(--mt);cursor:pointer;font-family:'Cairo',sans-serif;font-size:11px;transition:all .2s}
+.rbtn.sel{border-color:var(--ac);background:rgba(108,99,255,.12);color:#fff}
+.rbox{border:2px solid currentColor;border-radius:3px;opacity:.7}
+.dur-row{display:flex;align-items:center;gap:12px}
+input[type=range]{flex:1;-webkit-appearance:none;height:5px;background:var(--bd);border-radius:3px;outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--tl));cursor:pointer}
+.dur-val{background:rgba(108,99,255,.15);border:1px solid rgba(108,99,255,.3);border-radius:8px;padding:6px 12px;font-weight:700;color:var(--tl);font-size:13px;min-width:68px;text-align:center}
+.tips{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.tip{background:rgba(108,99,255,.1);border:1px solid rgba(108,99,255,.2);border-radius:100px;padding:5px 11px;font-size:11px;color:var(--mt);cursor:pointer;font-family:'Cairo',sans-serif}
+.trow{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
+.tgl{width:44px;height:24px;border-radius:100px;cursor:pointer;transition:background .3s;background:var(--bd);position:relative;flex-shrink:0}
+.tgl.on{background:linear-gradient(135deg,var(--ac),var(--tl))}
+.tknob{position:absolute;top:3px;width:18px;height:18px;border-radius:50%;background:white;transition:left .3s}
+.uzone{border:2px dashed var(--bd);border-radius:10px;padding:24px 14px;text-align:center;cursor:pointer;background:var(--bg)}
+.previews{display:flex;flex-wrap:wrap;gap:9px;margin-top:11px}
+.pitem{position:relative;width:76px;height:76px;border-radius:9px;overflow:hidden;border:2px solid var(--bd)}
+.pitem img{width:100%;height:100%;object-fit:cover}
+.pitem .del{position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:rgba(220,30,30,.9);border:none;color:white;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.info{background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);border-radius:10px;padding:11px 14px;font-size:12px;color:var(--mt);line-height:1.8;margin-bottom:13px}
+.info strong{color:var(--tl)}
+.info code{background:rgba(255,255,255,.1);padding:1px 5px;border-radius:4px}
+.err{background:rgba(255,101,132,.1);border:1px solid rgba(255,101,132,.3);border-radius:10px;padding:12px 14px;color:#ff8da0;font-size:12px;margin-bottom:13px;display:none}
+.err.show{display:block}
+.warn{color:#ffb464;font-size:11px;margin-top:5px}
+.gen-btn{width:100%;padding:17px;border-radius:14px;border:none;background:linear-gradient(135deg,var(--ac) 0%,#9b59b6 50%,var(--tl) 100%);color:white;font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(108,99,255,.3);transition:all .25s}
+.gen-btn:hover:not(:disabled){transform:translateY(-2px)}
+.gen-btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.status-area{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-top:14px;display:none}
+.status-area.show{display:block}
+.st-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.st-ico{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.st-ico.run{background:rgba(108,99,255,.2);animation:glow 2s ease-in-out infinite}
+.st-ico.ok{background:rgba(67,232,216,.2)}
+.st-ico.err{background:rgba(255,101,132,.2)}
+.st-title{font-size:14px;font-weight:700;margin-bottom:3px}
+.st-desc{font-size:11px;color:var(--mt)}
+.prog-wrap{background:var(--bg);border-radius:100px;height:5px;overflow:hidden;margin-bottom:12px}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--ac),var(--tl));border-radius:100px;transition:width .5s}
+.log-box{font-size:11px;color:var(--mt);font-family:monospace;background:var(--bg);border-radius:8px;padding:10px;max-height:75px;overflow-y:auto;direction:ltr}
+.log-line{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.03)}
+.log-line:last-child{color:var(--tl);border:none}
+.vid-box{border-radius:10px;overflow:hidden;background:#000;margin-top:14px}
+.vid-box video{width:100%;max-height:390px;display:block}
+.dl-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:13px;margin-top:11px;border-radius:10px;border:1px solid var(--tl);background:rgba(67,232,216,.08);color:var(--tl);font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;text-decoration:none}
+.spin{display:inline-block;width:17px;height:17px;border:2.5px solid rgba(255,255,255,.2);border-top-color:white;border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-left:7px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(108,99,255,.4)}50%{box-shadow:0 0 14px 4px rgba(108,99,255,.4)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="hdr">
+  <div class="badge"><span class="dot"></span>VideoForge AI</div>
+  <h1>مولّد الفيديو بالذكاء الاصطناعي</h1>
+  <p class="sub">Seedance 2.0 · Kling v2.1 · MiniMax — نص أو صور → فيديو</p>
+</div>
+
+<div class="card hl">
+  <div class="slbl">🔑 Replicate API Key</div>
+  <div class="info">من <strong>replicate.com/account/api-tokens</strong> — يبدأ بـ <code>r8_</code></div>
+  <label>API Key</label>
+  <input type="password" id="apiKey" placeholder="r8_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" dir="ltr">
+</div>
+
+<div class="card">
+  <div class="slbl">🤖 النموذج</div>
+  <div class="models">
+    <div class="mcard sel" data-rid="models/bytedance/seedance-2.0/predictions" data-max="15" data-img="image" onclick="selModel(this)">
+      <div class="ico">🌱</div><div class="nm">Seedance 2.0</div>
+      <div class="bdg" style="background:rgba(108,99,255,.2);color:#6c63ff">⭐ الأقوى</div>
+    </div>
+    <div class="mcard" data-rid="models/kwaivgi/kling-v2.1/predictions" data-max="10" data-img="start_image" onclick="selModel(this)">
+      <div class="ico">⚡</div><div class="nm">Kling v2.1</div>
+      <div class="bdg" style="background:rgba(255,101,132,.2);color:#ff8da0">سينمائي</div>
+    </div>
+    <div class="mcard" data-rid="models/minimax/video-01/predictions" data-max="6" data-img="first_frame_image" onclick="selModel(this)">
+      <div class="ico">🍌</div><div class="nm">MiniMax</div>
+      <div class="bdg" style="background:rgba(67,232,216,.2);color:#43e8d8">سريع</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="slbl">✍️ البرومت</div>
+  <label>وصف الفيديو</label>
+  <textarea id="prompt" placeholder="مثال: امرأة تمشي على شاطئ عند غروب الشمس، موجات هادئة، إضاءة ذهبية، سينمائي 4K..."></textarea>
+  <div style="text-align:left;font-size:10px;color:var(--mt);margin-top:4px"><span id="cc">0</span>/1000</div>
+  <div class="tips">
+    <span class="tip" onclick="addTip('cinematic golden hour lighting')">🌅 ذهبي</span>
+    <span class="tip" onclick="addTip('slow motion, smooth camera pan')">🎬 سلو موشن</span>
+    <span class="tip" onclick="addTip('aerial drone shot')">🚁 جوي</span>
+    <span class="tip" onclick="addTip('hyper realistic, 4K ultra HD')">💎 4K</span>
+  </div>
+  <div style="margin-top:13px">
+    <label>🚫 Negative Prompt (اختياري)</label>
+    <input type="text" id="negp" placeholder="blurry, distorted, watermark...">
+  </div>
+</div>
+
+<div class="card">
+  <div class="slbl">⚙️ إعدادات الفيديو</div>
+  <label>⏱️ المدة — <span id="maxLbl">الحد الأقصى: 15ث</span></label>
+  <div class="dur-row">
+    <input type="range" id="dur" min="5" max="600" value="10" step="1" oninput="updDur()">
+    <div class="dur-val" id="durVal">10ث</div>
+  </div>
+  <div id="durWarn" class="warn" style="display:none"></div>
+  <div style="margin-top:16px">
+    <label>📐 نسبة الأبعاد</label>
+    <div class="ratios">
+      <button class="rbtn sel" data-r="16:9" onclick="selRatio(this)"><div class="rbox" style="width:28px;height:16px"></div><span>16:9</span><small style="font-size:9px;opacity:.5">يوتيوب</small></button>
+      <button class="rbtn" data-r="9:16" onclick="selRatio(this)"><div class="rbox" style="width:16px;height:28px"></div><span>9:16</span><small style="font-size:9px;opacity:.5">ريلز</small></button>
+      <button class="rbtn" data-r="1:1" onclick="selRatio(this)"><div class="rbox" style="width:22px;height:22px"></div><span>1:1</span><small style="font-size:9px;opacity:.5">مربع</small></button>
+      <button class="rbtn" data-r="4:3" onclick="selRatio(this)"><div class="rbox" style="width:28px;height:21px"></div><span>4:3</span><small style="font-size:9px;opacity:.5">كلاسيك</small></button>
+      <button class="rbtn" data-r="21:9" onclick="selRatio(this)"><div class="rbox" style="width:36px;height:15px"></div><span>21:9</span><small style="font-size:9px;opacity:.5">سينما</small></button>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="trow">
+    <span style="font-size:13px;font-weight:700">🖼️ إنشاء من صورة (Image to Video)</span>
+    <div class="tgl" id="imgTgl" onclick="toggleImg()"><div class="tknob" id="tknob" style="left:3px"></div></div>
+  </div>
+  <div id="imgSec" style="display:none">
+    <div class="uzone" onclick="document.getElementById('fInput').click()" ondragover="event.preventDefault()" ondrop="event.preventDefault();handleFiles(event.dataTransfer.files)">
+      <div style="font-size:28px;margin-bottom:7px">📸</div>
+      <p style="color:var(--mt);font-size:12px;line-height:1.6"><strong style="color:var(--ac)">اضغط أو اسحب الصور</strong><br>PNG · JPG · WEBP</p>
+    </div>
+    <input type="file" id="fInput" accept="image/*" multiple style="display:none" onchange="handleFiles(this.files)">
+    <div class="previews" id="previews"></div>
+  </div>
+  <p id="noImgHint" style="font-size:12px;color:var(--mt)">🔤 إنشاء من النص فقط</p>
+</div>
+
+<div class="err" id="errBox"></div>
+<button class="gen-btn" id="genBtn" onclick="generate()">✨ إنشاء الفيديو الآن</button>
+
+<div class="status-area" id="statusArea">
+  <div class="st-head">
+    <div class="st-ico run" id="stIco">⚙️</div>
+    <div><div class="st-title" id="stTitle">جاري الإنشاء...</div><div class="st-desc" id="stDesc">يرجى الانتظار</div></div>
+  </div>
+  <div class="prog-wrap"><div class="prog-bar" id="progBar" style="width:5%"></div></div>
+  <div class="log-box" id="logBox"></div>
+  <div class="vid-box" id="vidBox" style="display:none"><video id="vidPlayer" controls playsinline></video></div>
+  <a href="#" class="dl-btn" id="dlBtn" style="display:none" download="videoforge.mp4">⬇️ تنزيل الفيديو</a>
+</div>
+</div>
+
+<script>
+let mRid='models/bytedance/seedance-2.0/predictions',mMax=15,mImgKey='image',ratio='16:9',imgs=[],pV=5,pT=null,useImg=false;
+const $=id=>document.getElementById(id);
+const showErr=m=>{$('errBox').textContent='⚠️ '+m;$('errBox').classList.add('show');setTimeout(()=>$('errBox').classList.remove('show'),9000)};
+const addLog=m=>{const d=$('logBox'),e=document.createElement('div');e.className='log-line';e.textContent=m;d.appendChild(e);d.scrollTop=d.scrollHeight};
+const anim=t=>{clearInterval(pT);pT=setInterval(()=>{if(pV>=t){clearInterval(pT);return;}pV=Math.min(pV+.6,t);$('progBar').style.width=pV+'%';},250)};
+const setSt=(i,t,d,c)=>{$('stIco').textContent=i;$('stIco').className='st-ico '+c;$('stTitle').textContent=t;$('stDesc').textContent=d};
+function dLabel(v){if(v<60)return v+'ث';const m=Math.floor(v/60),s=v%60;return s?m+'د '+s+'ث':m+'د';}
+function updDur(){const v=+$('dur').value;$('durVal').textContent=dLabel(v);const w=$('durWarn');if(v>mMax){w.style.display='block';w.textContent='⚠️ سيُستخدم '+mMax+'ث';}else w.style.display='none';}
+function selModel(el){document.querySelectorAll('.mcard').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');mRid=el.dataset.rid;mMax=+el.dataset.max;mImgKey=el.dataset.img;updDur();$('maxLbl').textContent='الحد الأقصى: '+mMax+'ث';}
+function selRatio(el){document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');ratio=el.dataset.r;}
+function addTip(t){const p=$('prompt');p.value=p.value?(p.value+', '+t):t;$('cc').textContent=p.value.length;}
+$('prompt').addEventListener('input',()=>$('cc').textContent=$('prompt').value.length);
+function toggleImg(){useImg=!useImg;$('imgTgl').className='tgl'+(useImg?' on':'');$('tknob').style.left=useImg?'23px':'3px';$('imgSec').style.display=useImg?'block':'none';$('noImgHint').style.display=useImg?'none':'block';if(!useImg)imgs=[];}
+function handleFiles(files){Array.from(files).forEach(f=>{const r=new FileReader();r.onload=e=>{imgs.push(e.target.result);renderPrev();};r.readAsDataURL(f);});}
+function removeImg(i){imgs.splice(i,1);renderPrev();}
+function renderPrev(){$('previews').innerHTML=imgs.map((s,i)=>`<div class="pitem"><img src="${s}"><button class="del" onclick="removeImg(${i})">×</button></div>`).join('');}
+function buildInput(img){const dur=Math.min(+$('dur').value,mMax),neg=$('negp').value.trim(),base={prompt:$('prompt').value,aspect_ratio:ratio,duration:dur};if(neg)base.negative_prompt=neg;if(img)base[mImgKey]=img;return base;}
+
+async function callProxy(path,method='GET',body=null){
+  const key=$('apiKey').value.trim();
+  const r=await fetch('/api/proxy',{method,headers:{'Content-Type':'application/json','x-replicate-key':key,'x-replicate-path':path},...(body?{body:JSON.stringify(body)}:{})});
+  const d=await r.json();
+  if(!r.ok)throw new Error(d.error||d.detail||'HTTP '+r.status);
+  return d;
+}
+
+async function generate(){
+  const key=$('apiKey').value.trim(),prompt=$('prompt').value.trim();
+  if(!key||!key.startsWith('r8_')){showErr('أدخل API Key (يبدأ بـ r8_)');return;}
+  if(!prompt){showErr('اكتب وصف الفيديو');return;}
+  if(useImg&&!imgs.length){showErr('ارفع صورة أو أوقف خيار الصورة');return;}
+  const btn=$('genBtn');btn.disabled=true;btn.innerHTML='جاري الإنشاء... <span class="spin"></span>';
+  $('statusArea').classList.add('show');$('vidBox').style.display='none';$('dlBtn').style.display='none';
+  $('logBox').innerHTML='';pV=5;$('progBar').style.width='5%';
+  setSt('⚙️','جاري الإرسال...','جاري الاتصال...','run');anim(15);
+  addLog('▶ النموذج: '+mRid);
+  try{
+    const pred=await callProxy(mRid,'POST',{input:buildInput(useImg&&imgs[0]?imgs[0]:null)});
+    if(!pred.id)throw new Error('لم يُرجع الخادم معرّف العملية');
+    addLog('▶ معرّف: '+pred.id);anim(20);
+    setSt('🔄','جاري المعالجة...',pred.id.slice(0,20)+'...','run');
+    if(pred.status==='succeeded'){done(pred,btn);return;}
+    await poll(pred.id,btn);
+  }catch(e){setSt('❌','خطأ',e.message,'err');showErr(e.message);addLog('❌ '+e.message);btn.disabled=false;btn.innerHTML='✨ حاول مجدداً';}
+}
+
+function done(d,btn){
+  clearInterval(pT);$('progBar').style.width='100%';
+  const url=Array.isArray(d.output)?d.output[0]:(d.output?.video||d.output);
+  if(!url)throw new Error('لم يُرجع النموذج رابط الفيديو');
+  addLog('✅ اكتمل!');
+  $('vidPlayer').src=url;$('vidBox').style.display='block';
+  $('dlBtn').href=url;$('dlBtn').style.display='flex';
+  setSt('✅','تم!','شاهد وحمّل أدناه','ok');
+  const b=document.getElementById('genBtn');b.disabled=false;b.innerHTML='✨ إنشاء جديد';
+}
+
+async function poll(id,btn){
+  let t=0;
+  const run=async()=>{
+    t++;
+    try{
+      const d=await callProxy('predictions/'+id);
+      if(d.status==='starting'){anim(25);if(t%4===0)addLog('⏳ يبدأ...');}
+      else if(d.status==='processing'){anim(Math.min(25+(t/180)*65,88));if(t%5===0)addLog('🔄 يعمل ('+(t*3)+'ث)...');}
+      else if(d.status==='succeeded'){done(d,btn);return;}
+      else if(['failed','canceled'].includes(d.status))throw new Error(d.error||'فشل');
+      if(t<240)setTimeout(run,3000);else throw new Error('انتهت المهلة');
+    }catch(e){setSt('❌','فشل',e.message,'err');showErr(e.message);addLog('❌ '+e.message);const b=document.getElementById('genBtn');b.disabled=false;b.innerHTML='✨ حاول مجدداً';}
+  };
+  setTimeout(run,2000);
+}
+updDur();
+</script>
+</body>
+</html>
